@@ -7,7 +7,6 @@ The project combines a trained machine learning model with a FastAPI backend and
 ## Live Demo
 
 - **Web Application:** https://mental-health-score-predictor-1-idwp.onrender.com
-- **Backend API:** https://mental-health-score-predictor-kxq7.onrender.com
 - **API Documentation:** https://mental-health-score-predictor-kxq7.onrender.com/docs
 
 ## Overview
