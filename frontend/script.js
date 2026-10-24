@@ -26,6 +26,7 @@
   const scoreContextEl = document.getElementById("score-context");
   const gaugeFill = document.getElementById("gauge-fill");
 
+  // Optional: this element does not exist in your current HTML.
   const errorLabelEl = document.getElementById("error-label");
   const errorCopyEl = document.getElementById("error-copy");
 
@@ -50,7 +51,6 @@
     !scoreBandEl ||
     !scoreContextEl ||
     !gaugeFill ||
-    !errorLabelEl ||
     !errorCopyEl
   ) {
     console.error(
@@ -110,9 +110,12 @@
 
   // ---------------------------------------------------------
   // STRESS-LEVEL BUTTONS
-  // Uses event delegation to handle all four buttons.
   // ---------------------------------------------------------
   if (stressGroup && stressInput) {
+    stressGroup.querySelectorAll(".seg-btn").forEach((button) => {
+      button.setAttribute("aria-pressed", "false");
+    });
+
     stressGroup.addEventListener("click", (event) => {
       const button = event.target.closest(".seg-btn");
 
@@ -120,31 +123,22 @@
         return;
       }
 
-      // Clear the previous selection.
+      // Remove the previous selection.
       stressGroup.querySelectorAll(".seg-btn").forEach((item) => {
         item.classList.remove("active");
         item.setAttribute("aria-pressed", "false");
       });
 
-      // Activate the selected button.
+      // Select the clicked button.
       button.classList.add("active");
       button.setAttribute("aria-pressed", "true");
 
-      // Store the value for form submission.
+      // Save the selected value.
       stressInput.value = button.dataset.value || "";
 
-      // Remove any validation error.
       clearFieldError(stressInput);
 
       console.log("Selected stress level:", stressInput.value);
-    });
-
-    // Initialize accessibility state.
-    stressGroup.querySelectorAll(".seg-btn").forEach((button) => {
-      button.setAttribute(
-        "aria-pressed",
-        button.classList.contains("active") ? "true" : "false"
-      );
     });
   }
 
@@ -186,7 +180,7 @@
   drawTicks();
 
   // ---------------------------------------------------------
-  // FORM VALIDATION
+  // COLLECT FORM DATA
   // ---------------------------------------------------------
   function collectPayload() {
     const formData = new FormData(form);
@@ -217,6 +211,9 @@
     };
   }
 
+  // ---------------------------------------------------------
+  // FORM VALIDATION
+  // ---------------------------------------------------------
   function validate(payload) {
     const errors = [];
 
@@ -256,10 +253,7 @@
     requiredFields.forEach((key) => {
       const input = document.getElementById(key);
 
-      if (
-        !payload[key] ||
-        String(payload[key]).trim() === ""
-      ) {
+      if (!payload[key] || String(payload[key]).trim() === "") {
         errors.push([input, "This field is required."]);
       }
     });
@@ -356,7 +350,11 @@
   // DISPLAY ERRORS
   // ---------------------------------------------------------
   function renderError(title, message) {
-    errorLabelEl.textContent = title;
+    // The title element is optional in the current HTML.
+    if (errorLabelEl) {
+      errorLabelEl.textContent = title;
+    }
+
     errorCopyEl.textContent = message;
     showState("error");
   }
